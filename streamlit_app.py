@@ -4,8 +4,8 @@ import json
 from datetime import datetime
 import time
 
-BASE_URL = "http://localhost:8000"
-#BASE_URL = "https://todoapp-backend-1fm4.onrender.com/"
+#BASE_URL = "http://localhost:8000"
+BASE_URL = "https://todoapp-backend-1fm4.onrender.com"
 st.set_page_config(page_title="Todo App", layout="wide", initial_sidebar_state="expanded")
 
 # Custom Theme & Styling
