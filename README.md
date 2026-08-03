@@ -16,6 +16,7 @@ Disbale Env -> deactivate
   pip install "python-jose[cryptography]"  (JWT)
   pip install psycopg2-binary (for postgres)
   pip install pymysql (for mysql)
+  python -m pip install streamlit requests (streamlit)
 =====
 Installing and setting up sqlit3 in Window
 go to -> https://sqlite.org/download.html
@@ -55,3 +56,11 @@ Quick options and commands:
 • Conda: conda env export > environment.yml; conda env create -f environment.yml
 ==========================================================
 uvicorn main:app --host 0.0.0.0 --port 10004
+streamlit run streamlit_app.py --server.address=0.0.0.0 --server.port=10005
+
+===
+.\todoenv\Scripts\Activate.ps1
+python -m uvicorn main:app --reload
+
+.\todoenv\Scripts\Activate.ps1
+streamlit run streamlit_app.py
