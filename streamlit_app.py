@@ -506,8 +506,10 @@ def update_todo(todo_id, title, description, priority, completed):
             headers=get_headers(),
             timeout=30,
         )
-        if response.status_code == 204:
-            return True, "Todo updated."
+        if response.status_code == 200:
+            result = response.json()
+            if result:
+                return True, "Todo updated."
         return False, "Update failed"
     except Exception as e:
         return False, str(e)
@@ -984,7 +986,7 @@ def admin_panel():
         if st.button("Sign out", use_container_width=True, key="admin_out"):
             logout()
 
-    tabs = st.tabs(["All todos", "Users", "Profile"])
+    tabs = st.tabs(["All todos", "New task", "Users", "Profile"])
 
     # ── Admin todos: GET /admin/todos · DELETE /admin/todo/{id}/ ──
     with tabs[0]:
@@ -1017,8 +1019,28 @@ def admin_panel():
                 unsafe_allow_html=True,
             )
 
-    # ── Users: GET /auth/users ──
+    # ── Create: POST /todo ──
     with tabs[1]:
+        st.markdown('<p class="section-label">New task</p>', unsafe_allow_html=True)
+        with st.form("create_todo_form_admin", clear_on_submit=True):
+            title = st.text_input("Title", placeholder="What needs doing?", key="admin_create_title")
+            description = st.text_area("Description", placeholder="Short notes or context", height=110, key="admin_create_desc")
+            priority = st.slider("Priority", 1, 9, 5, help="1–3 low · 4–6 medium · 7–9 high", key="admin_create_priority")
+            submitted = st.form_submit_button("Create task", type="primary", use_container_width=True, key="admin_create_submit")
+            if submitted:
+                if title and description:
+                    ok, msg = create_todo(title, description, priority)
+                    if ok:
+                        st.success(msg)
+                        time.sleep(0.5)
+                        st.rerun()
+                    else:
+                        st.error(msg)
+                else:
+                    st.warning("Title and description are required.")
+
+    # ── Users: GET /auth/users ──
+    with tabs[2]:
         st.markdown('<p class="section-label">Registered users</p>', unsafe_allow_html=True)
         users = get_all_users()
         if users:
@@ -1048,7 +1070,7 @@ def admin_panel():
             )
 
     # ── Profile ──
-    with tabs[2]:
+    with tabs[3]:
         st.markdown('<p class="section-label">Account</p>', unsafe_allow_html=True)
         if st.button("Refresh profile", key="admin_refresh"):
             st.session_state.user_info = get_current_user()
