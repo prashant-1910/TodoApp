@@ -8,7 +8,11 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from starlette import status
-from models import Users
+
+from RequestDTO.UserRequest import UserRequest
+from ResponseDTO.Token import Token
+#from models import Users
+from Models.User import Users
 from database import SessionLocal
 
 router = APIRouter(
@@ -33,17 +37,7 @@ oath2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class UserRequest(BaseModel):
-    username: str
-    email: str
-    password: str
-    firstName: str
-    lastName: str
-    role: str
 
-class Token(BaseModel):
-    access_token: str
-    token_type:str
 @router.post("/",status_code=status.HTTP_201_CREATED)
 async def create_user(db : db_dependency,
                       userRequest: UserRequest):
@@ -97,20 +91,3 @@ async def get_current_user(token:Annotated[str,Depends(oath2_bearer)]):
         return {'username':username,'user_id':user_id,'user_role':user_role}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials 2")
-
-
-# async def get_current_user(token:Annotated[str,Depends(oath2_bearer)]):
-#     print(f"Validating token: {token}")
-#     try:
-#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-#         username: str = payload.get('sub')
-#         user_id: int = payload.get('id')
-#         if username is None or user_id is None:
-#             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Could not validate credentials 1")
-#         return {'username':username,'id':user_id}
-#     except JWTError as e:
-#         print(f"JWT decode error: {e}")
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials 2")
-#     except Exception as e:
-#         print(f"Token validation error: {e}")
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials 2")

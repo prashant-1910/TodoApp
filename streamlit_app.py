@@ -762,7 +762,7 @@ def login_page():
         """
         <div class="brand-hero">
             <h1 class="brand-mark">Taskflow</h1>
-            <p class="brand-tag">Plan clearly. Finish what matters.</p>
+            <p class="brand-tag">Plan clearly. Finish what matters!</p>
         </div>
         """,
         unsafe_allow_html=True,

@@ -1,4 +1,4 @@
-# TodoApp
+# TodoApp Application Setup
 
 Python version -> Python 3.14.6
 create env -> python -m venv fastapienv 

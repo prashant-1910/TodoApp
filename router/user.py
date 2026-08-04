@@ -4,9 +4,10 @@ from typing import Annotated
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from models import Users
+from Models.User import Users
 from starlette import status
 from database import SessionLocal
+from RequestDTO.UserVerified import userVarification
 from .auth import get_current_user
 
 
@@ -14,10 +15,6 @@ router = APIRouter(
     prefix='/user',
     tags=['user']
 );
-
-class userVarification(BaseModel):
-    password: str
-    new_password: str
 
 
 def get_db():
